@@ -122,7 +122,7 @@
 ** CF global data
 *************************************************************************/
 #ifdef CF_DEBUG
-uint32              cfdbg = 0;
+uint32              cfdbg = 1;
 #endif
 
 CF_AppData_t        CF_AppData;
@@ -1022,7 +1022,7 @@ void CF_SendPDUToEngine(CFE_SB_MsgPtr_t MessagePtr)
 #endif
 
     /* claculate the pdu 'length' field needed by the engine */
-    CF_AppData.RawPduInputBuf.length = PduHdrPtr->PDataLen + PduHdrBytes;
+    CF_AppData.RawPduInputBuf.length = CFE_MAKE_BIG16(PduHdrPtr->PDataLen) + PduHdrBytes;
 
     if(CF_AppData.RawPduInputBuf.length > CF_INCOMING_PDU_BUF_SIZE){
         CFE_EVS_SendEvent(CF_PDU_RCV_ERR2_EID, CFE_EVS_ERROR,
@@ -1102,9 +1102,11 @@ void CF_WakeupProcessing(CFE_SB_MsgPtr_t MessagePtr)
             {
                 for(i=0;i < CF_AutoSuspendCnt;i++)
                 {
-                    sprintf(TransIdBuf,"%s_%lu",CF_AppData.Tbl->FlightEntityId,
-                                                (long unsigned int)CF_AutoSuspendArray[i]);
-
+                    CF_vsnprintf(TransIdBuf, sizeof(TransIdBuf),
+                      CF_VSN_WAKE_COPY_EID, CF_VSN_WAKE_TRUNC_EID, 
+                      "%s_%lu", CF_AppData.Tbl->FlightEntityId,
+                      (long unsigned int)CF_AutoSuspendArray[i]);                            
+                                    
                     CF_BuildCmdedRequest("Suspend",&TransIdBuf[0]);
 
                 }/* end for */

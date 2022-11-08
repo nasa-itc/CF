@@ -2,7 +2,7 @@
 ** File:
 **   $Id: cf_cmds.c 1.27.1.1 2015/03/06 15:30:46EST sstrege Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright ï¿½ 2007-2014 United States Government as represented by the 
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -445,7 +445,9 @@ void CF_CARSCmd(CFE_SB_MsgPtr_t MessagePtr, char *WhichCmd)
         if(CF_ChkTermination(CmdPtr->Trans,OS_MAX_PATH_LEN)==CF_ERROR)
         {
             /* Construct a string like "Suspend Cmd" */
-            sprintf(WhichCmdBuf,"%s %s",WhichCmd,"Cmd");            
+            CF_vsnprintf(WhichCmdBuf, sizeof(WhichCmdBuf), 
+                         CF_VSN_CARS_CMD1_COPY_EID, CF_VSN_CARS_CMD1_TRUNC_EID,
+                         "%s %s", WhichCmd, "Cmd");            
             CF_SendEventNoTerm(WhichCmdBuf);
             CF_AppData.Hk.ErrCounter++;
             return;
@@ -457,7 +459,9 @@ void CF_CARSCmd(CFE_SB_MsgPtr_t MessagePtr, char *WhichCmd)
         {
             
             /* Add ' Cmd' to string passed in */
-            sprintf(WhichCmdBuf,"%s %s",WhichCmd,"Cmd");
+            CF_vsnprintf(WhichCmdBuf, sizeof(WhichCmdBuf),
+                         CF_VSN_CARS_CMD2_COPY_EID, CF_VSN_CARS_CMD2_TRUNC_EID,
+                         "%s %s", WhichCmd, "Cmd");
             
             if(CF_ValidateFilenameReportErr(CmdPtr->Trans,WhichCmdBuf)==CF_ERROR)
             {                                

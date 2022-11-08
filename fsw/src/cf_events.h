@@ -2,7 +2,7 @@
 ** File:
 **   $Id: cf_events.h 1.20.1.1 2015/03/06 15:30:33EST sstrege Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright ï¿½ 2007-2014 United States Government as represented by the 
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -231,6 +231,32 @@
 #define CF_GIVETAKE_CMD_EID         158
 #define CF_QUICK_ERR1_EID           159
 #define CF_QUICK_CMD_EID            160
+#define CF_VSN_WAKE_TRUNC_EID       161
+#define CF_VSN_WAKE_COPY_EID        162
+#define CF_VSN_IND_MDR_TRUNC_EID    163
+#define CF_VSN_IND_MDR_COPY_EID     164
+#define CF_VSN_IND_MD1_TRUNC_EID    165
+#define CF_VSN_IND_MD1_COPY_EID     166
+#define CF_VSN_IND_MD2_TRUNC_EID    165
+#define CF_VSN_IND_MD2_COPY_EID     166
+#define CF_VSN_IND_MD3_TRUNC_EID    167
+#define CF_VSN_IND_MD3_COPY_EID     168
+#define CF_VSN_POUT_READY_TRUNC_EID 169
+#define CF_VSN_POUT_READY_COPY_EID  170
+#define CF_VSN_POUT_SEND_TRUNC_EID  171
+#define CF_VSN_POUT_SEND_COPY_EID   172
+#define CF_VSN_CARS_CMD1_TRUNC_EID  173
+#define CF_VSN_CARS_CMD1_COPY_EID   174
+#define CF_VSN_CARS_CMD2_TRUNC_EID  175
+#define CF_VSN_CARS_CMD2_COPY_EID   176
+#define CF_VSN_UP_ACTIVE_TRUNC_EID  177
+#define CF_VSN_UP_ACTIVE_COPY_EID   178
+#define CF_VSN_PB_ACTIVE_TRUNC_EID  179
+#define CF_VSN_PB_ACTIVE_COPY_EID   180
+#define CF_VSN_IND_ALCTD_TRUNC_EID  181
+#define CF_VSN_IND_ALCTD_COPY_EID   182
+#define CF_VSN_DFLT_COND_TRUNC_EID  183
+#define CF_VSN_DFLT_COND_COPY_EID   184
 
 
 #endif /* _cf_events_h_ */

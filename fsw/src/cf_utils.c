@@ -2,7 +2,7 @@
 ** File:
 **   $Id: cf_utils.c 1.22.1.1 2015/03/06 15:30:38EST sstrege Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright ï¿½ 2007-2014 United States Government as represented by the 
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -429,7 +429,9 @@ int32 CF_FindActiveTransIdByName(char *TransIdBuf,char *Filename)
     if(QueueEntryPtr != NULL)
     {
         /* convert the trans num to a string */
-        sprintf(&TmpTransNumBuf[0],"%u",(unsigned int)QueueEntryPtr->TransNum);
+        CF_vsnprintf(&TmpTransNumBuf[0], sizeof(TmpTransNumBuf),
+                     CF_VSN_UP_ACTIVE_COPY_EID, CF_VSN_UP_ACTIVE_TRUNC_EID,
+                     "%u", (unsigned int)QueueEntryPtr->TransNum);
 
         /* build the transaction-id formatted string */
         strncpy(&TmpBuf[0],&QueueEntryPtr->SrcEntityId[0],CF_MAX_TRANSID_CHARS);
@@ -447,7 +449,9 @@ int32 CF_FindActiveTransIdByName(char *TransIdBuf,char *Filename)
     {    
 
         /* convert the trans num to a string */
-        sprintf(&TmpTransNumBuf[0],"%u",(unsigned int)QueueEntryPtr->TransNum);
+        CF_vsnprintf(&TmpTransNumBuf[0], sizeof(TmpTransNumBuf),
+                     CF_VSN_PB_ACTIVE_COPY_EID, CF_VSN_PB_ACTIVE_TRUNC_EID,
+                     "%u", (unsigned int)QueueEntryPtr->TransNum);
 
         /* build the transaction-id formatted string */
         strncpy(&TmpBuf[0],&QueueEntryPtr->SrcEntityId[0],CF_MAX_TRANSID_CHARS);
@@ -1135,7 +1139,9 @@ void CF_GetCondCodeString(char *CallersBuf,uint32 CondCode,uint32 BufSize)
             break;            
 
         default:
-            sprintf(CallersBuf,"UNEXPECTED %lu",(long unsigned int)CondCode);
+            CF_vsnprintf(CallersBuf, BufSize, CF_VSN_DFLT_COND_COPY_EID,
+                         CF_VSN_DFLT_COND_TRUNC_EID, "UNEXPECTED %lu", 
+                         (long unsigned int)CondCode);
             break;
             
     }/* end switch */
@@ -1195,6 +1201,69 @@ uint8 CF_GetResponseChanFromTransId(uint32 Queue, char *SrcEntityId, uint32 Tran
 
 }/* end CF_GetResponseChanFromTransId */
 
+
+/*
+**             Function Prologue
+**
+** Function Name: CF_vsnprintf
+**
+** Purpose: Provides a size safe way to copy a variable length string into a
+**          buffer. Will not allow a format string larger than buffer to 
+**          overrun the buffer space.  Catches errors on vsnprintf call and
+**          when the format string is truncated by the call.
+**
+** Input arguments: 
+**    char *Buffer, size_t BufSize, uint16 CopyErrId, uint16 TruncErrId,
+**    const char *Format, ...
+**
+** Return values:
+**    void
+*/
+void CF_vsnprintf(char *Buffer, size_t BufSize, uint16 CopyErrId, 
+                  uint16 TruncErrId, const char *Format, ...)
+{
+    va_list   ArgPtr;
+    int32     Status, formatSize;
+
+    va_start (ArgPtr, Format);
+    formatSize = vsnprintf(Buffer, BufSize, Format, ArgPtr);
+    va_end (ArgPtr);
+      
+    /* formatSize, an int32, when compared to BufSize, a size_t which is an */
+    /* unsigned type, is automatically changed to unsigned.  Thus, checking */
+    /* for formatSize < 0 first, ensures that when compared to BufSize in */
+    /* the else block it can only reach there as a signed positive value. */
+    /* i.e. an error condition formatSize of -1 would be >= than any BufSize */
+    /* Thus, the ordering of the if statment here ensures correct error id */  
+      
+    if(formatSize < 0)
+    {
+      Status = CFE_EVS_SendEvent(CopyErrId, CFE_EVS_ERROR,
+        "Error (%d), unable to copy format to buffer: %s", formatSize, Format);
+
+      if ( Status != CFE_SUCCESS )
+      {
+          CFE_ES_WriteToSysLog(
+            "CF:Error sending vsnprintf copy error event:RC=0x%08X\n",
+            (unsigned int)Status);
+      }
+
+    }
+    else if(formatSize >= ((int32)BufSize)){
+      Status = CFE_EVS_SendEvent(TruncErrId, CFE_EVS_ERROR,
+                                 "Truncated message '%s', lost %zu characters.",
+                                 Format, (formatSize - BufSize));
+
+      if ( Status != CFE_SUCCESS )
+      {
+          CFE_ES_WriteToSysLog(
+            "CF:Error sending vsnprintf truncated error event:RC=0x%08X\n",
+            (unsigned int)Status);
+      }
+
+    }
+
+}/* end of CF_vsnprintf function*/
 
 
 #ifdef CF_DEBUG
