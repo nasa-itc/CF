@@ -2,7 +2,7 @@
 ** File:
 **   $Id: cf_app.h 1.16.1.1 2015/03/06 15:30:47EST sstrege Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright ï¿½ 2007-2014 United States Government as represented by the 
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -69,7 +69,7 @@
 #include "cf_platform_cfg.h"
 #include "cfdp_data_structures.h"
 
-
+//#define CF_DEBUG
 
 /************************************************************************
 ** Type Definitions

@@ -2,7 +2,7 @@
 ** File:
 **   $Id: cf_utils.h 1.16.1.1 2015/03/06 15:30:35EST sstrege Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright ï¿½ 2007-2014 United States Government as represented by the 
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -96,6 +96,8 @@ int32 CF_ValidateFilenameReportErr(char *Filename, char *Source);
 void CF_SendEventNoTerm(char *Source);
 uint8 CF_GetResponseChanFromMsgId(CFE_SB_MsgPtr_t MessagePtr);
 uint8 CF_GetResponseChanFromTransId(uint32 Queue, char *SrcEntityId, uint32 Trans);
+void CF_vsnprintf(char *Buffer, size_t BufSize, uint16 CopyErrId, 
+                  uint16 TruncErrId, const char *Format, ...);
 
 #ifdef CF_DEBUG
     void CF_ShowTbl(void);

@@ -2,7 +2,7 @@
 ** File:
 **   $Id: cf_callbacks.c 1.29.1.1 2015/03/06 15:30:34EST sstrege Exp  $
 **
-**   Copyright © 2007-2014 United States Government as represented by the 
+**   Copyright ï¿½ 2007-2014 United States Government as represented by the 
 **   Administrator of the National Aeronautics and Space Administration. 
 **   All Other Rights Reserved.  
 **
@@ -191,9 +191,12 @@ void CF_Indication (INDICATION_TYPE IndType, TRANS_STATUS TransInfo)
                     QueueEntryPtr->Warning  = CF_NOT_ISSUED;
                     QueueEntryPtr->NodeType = CF_UPLINK;
                     QueueEntryPtr->TransNum = TransInfo.trans.number;                    
-                    sprintf(&QueueEntryPtr->SrcEntityId[0],"%d.%d",
-                            TransInfo.trans.source_id.value[0],
-                            TransInfo.trans.source_id.value[1]);                                       
+                    CF_vsnprintf(&QueueEntryPtr->SrcEntityId[0],
+                                 CF_MAX_CFG_VALUE_CHARS, 
+                                 CF_VSN_IND_ALCTD_COPY_EID,
+                                 CF_VSN_IND_ALCTD_TRUNC_EID, "%d.%d",
+                                 TransInfo.trans.source_id.value[0],
+                                 TransInfo.trans.source_id.value[1]);                                       
                     
                     /* filenames not known until the metadata rcvd indication */
                     strcpy(&QueueEntryPtr->SrcFile[0],"UNKNOWN");
@@ -262,8 +265,10 @@ void CF_Indication (INDICATION_TYPE IndType, TRANS_STATUS TransInfo)
             
             CF_AppData.Hk.Up.MetaCount++;                                                                                   
 
-            sprintf(EntityIdBuf,"%d.%d",TransInfo.trans.source_id.value[0],
-                                        TransInfo.trans.source_id.value[1]);
+            CF_vsnprintf(EntityIdBuf, sizeof(EntityIdBuf),
+                         CF_VSN_IND_MDR_COPY_EID, CF_VSN_IND_MDR_TRUNC_EID, 
+                         "%d.%d", TransInfo.trans.source_id.value[0],
+                         TransInfo.trans.source_id.value[1]);
             
             /* file-receive transaction */
             CFE_EVS_SendEvent(CF_IN_TRANS_START_EID,CFE_EVS_INFORMATION,
@@ -357,8 +362,11 @@ void CF_Indication (INDICATION_TYPE IndType, TRANS_STATUS TransInfo)
                     (TransInfo.role ==  CLASS_2_RECEIVER) )
                 {
 
-                    sprintf(EntityIdBuf,"%d.%d",TransInfo.trans.source_id.value[0],
-                                        TransInfo.trans.source_id.value[1]);
+                    CF_vsnprintf(EntityIdBuf, sizeof(EntityIdBuf),
+                                 CF_VSN_IND_MD1_COPY_EID, 
+                                 CF_VSN_IND_MD1_TRUNC_EID, "%d.%d",
+                                 TransInfo.trans.source_id.value[0],
+                                 TransInfo.trans.source_id.value[1]);
 
 
                     QueueEntryPtr = CF_FindUpNodeByTransID(CF_UP_ACTIVEQ, EntityIdBuf, TransInfo.trans.number);
@@ -394,10 +402,13 @@ void CF_Indication (INDICATION_TYPE IndType, TRANS_STATUS TransInfo)
                         }
                     }                                          
                 
-                    if(QueueEntryPtr->Preserve == CF_DELETE_FILE)
-                    {                                               
-                        OS_remove(&TransInfo.md.source_file_name[0]);
-                    }                
+                    if(QueueEntryPtr != NULL)
+                    {
+                        if(QueueEntryPtr->Preserve == CF_DELETE_FILE)
+                        {                                               
+                            OS_remove(&TransInfo.md.source_file_name[0]);
+                        }
+                    }
                 
                     CF_MoveDwnNodeActiveToHistory(TransInfo.trans.number);
                 
@@ -413,10 +424,12 @@ void CF_Indication (INDICATION_TYPE IndType, TRANS_STATUS TransInfo)
             }else{
             
                 /* do transaction-failed processing */
-                sprintf(&CF_AppData.Hk.App.LastFailedTrans[0],"%d.%d_%lu",
-                        TransInfo.trans.source_id.value[0],
-                        TransInfo.trans.source_id.value[1],
-                        TransInfo.trans.number);
+                CF_vsnprintf(&CF_AppData.Hk.App.LastFailedTrans[0],
+                             CF_MAX_TRANSID_CHARS, CF_VSN_IND_MD2_COPY_EID,
+                             CF_VSN_IND_MD2_TRUNC_EID, "%d.%d_%lu",
+                             TransInfo.trans.source_id.value[0],
+                             TransInfo.trans.source_id.value[1],
+                             TransInfo.trans.number);
                                                                              
                 /* increment the corresponding telemetry counter */
                 CF_IncrFaultCtr(&TransInfo);
@@ -438,8 +451,11 @@ void CF_Indication (INDICATION_TYPE IndType, TRANS_STATUS TransInfo)
                 {
                     CF_AppData.Hk.Up.FailedCounter++;                                    
                     
-                    sprintf(EntityIdBuf,"%d.%d",TransInfo.trans.source_id.value[0],
-                                        TransInfo.trans.source_id.value[1]);                    
+                    CF_vsnprintf(EntityIdBuf, sizeof(EntityIdBuf), 
+                                 CF_VSN_IND_MD3_COPY_EID,
+                                 CF_VSN_IND_MD3_TRUNC_EID, "%d.%d",
+                                 TransInfo.trans.source_id.value[0],
+                                 TransInfo.trans.source_id.value[1]);                    
                     
                     QueueEntryPtr = CF_FindUpNodeByTransID(CF_UP_ACTIVEQ, EntityIdBuf, TransInfo.trans.number);
                     
@@ -643,7 +659,10 @@ boolean CF_PduOutputReady (PDU_TYPE PduType, TRANSACTION TransInfo,ID Destinatio
     int32   SemTakeRtn,Chan;
     char    SrcEntityIdBuf[CF_MAX_CFG_VALUE_CHARS];
         
-    sprintf(SrcEntityIdBuf,"%d.%d",TransInfo.source_id.value[0],TransInfo.source_id.value[1]);
+    CF_vsnprintf(SrcEntityIdBuf, sizeof(SrcEntityIdBuf), 
+                 CF_VSN_POUT_READY_COPY_EID, CF_VSN_POUT_READY_TRUNC_EID,
+                 "%d.%d", TransInfo.source_id.value[0],
+                 TransInfo.source_id.value[1]);
 
     /* if playback transaction... */
     /* For playback transactions source id in pdu is same as Flight Entity Id in table */ 
@@ -757,7 +776,10 @@ void CF_PduOutputSend (TRANSACTION TransInfo,ID DestinationId, CFDP_DATA *PduPtr
     if(CFE_TST(PduPtr->content[0],CF_PDUHDR_DIRECTION_BIT))
     {    
         /* direction is 'toward the file sender' (class 2 file-receive response) */
-        sprintf(SrcEntityIdBuf,"%d.%d",TransInfo.source_id.value[0],TransInfo.source_id.value[1]);
+        CF_vsnprintf(SrcEntityIdBuf, sizeof(SrcEntityIdBuf), 
+                     CF_VSN_POUT_SEND_COPY_EID, CF_VSN_POUT_SEND_TRUNC_EID,
+                     "%d.%d", TransInfo.source_id.value[0],
+                     TransInfo.source_id.value[1]);
 
         Chan = CF_GetResponseChanFromTransId(CF_UP_ACTIVEQ, SrcEntityIdBuf, TransInfo.number);
         
@@ -1137,7 +1159,7 @@ u_int_4 CF_FileSize(const char *Name)
     StatVal = OS_stat(Name,&OsStatBuf);
     if(StatVal >= OS_FS_SUCCESS)
     {
-        FileSize = OsStatBuf.st_size;        
+        FileSize = OsStatBuf.FileSize;        
     }
     else
     {
@@ -1317,7 +1339,7 @@ size_t CF_Fwrite(const void *Buffer, size_t Size,size_t Count, CFDP_FILE *File)
 int CF_Fclose(CFDP_FILE *File)
 {
     int32  CloseVal;
-    
+
     CFE_ES_PerfLogEntry(CF_FCLOSE_PERF_ID);
 
     CloseVal = CF_Tmpclose((uint32)File);

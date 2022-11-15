@@ -1,6 +1,6 @@
 /* FILE: cfdp_private.h -- specs that are private to the CFDP library.
  *
- *  Copyright © 2007-2014 United States Government as represented by the 
+ *  Copyright ï¿½ 2007-2014 United States Government as represented by the 
  *  Administrator of the National Aeronautics and Space Administration. 
  *  All Other Rights Reserved.  
  *
@@ -32,7 +32,7 @@
 /* May 2007:  Took out public option to enable/disable dynamic memory 
  * allocation, so set it privately.
  */
-#define IS_DYNAMIC_ALLOCATION_ENABLED 0
+#define IS_DYNAMIC_ALLOCATION_ENABLED 1
 
 /*---------------------------------------------------------------------*/
 /* As of 2006_09_08, the name of the generic data type is 'CFDP_DATA'  */

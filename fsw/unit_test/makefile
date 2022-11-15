@@ -13,9 +13,9 @@
 # by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
 #
 
-CFE_PATH=../../../../cFE611/fsw/cfe-core
-OSAL_PATH=../../../../OSAL31
-PSP_PATH=../../../../CFE_PSP11
+CFE_PATH=../../../../cfe/fsw/cfe-core
+OSAL_PATH=../../../../osal
+PSP_PATH=../../../../psp
 
 #
 # VPATH specifies the search paths for source files outside of the current directory.  Note that
@@ -25,7 +25,7 @@ PSP_PATH=../../../../CFE_PSP11
 VPATH := ../src
 VPATH += ../src/PRI
 VPATH += ../src/PUB
-VPATH += ./ut-assert/src
+VPATH += ../../../../tools/ut_assert/src
 
 #
 # INCLUDES specifies the search paths for include files outside of the current directory.  
@@ -38,7 +38,7 @@ INCLUDES += -I../src/PRI
 INCLUDES += -I../src/PUB
 #INCLUDES += -I../platform_inc
 INCLUDES += -I../mission_inc
-INCLUDES += -I./ut-assert/inc
+INCLUDES += -I../../../../tools/ut_assert/inc
 INCLUDES += -I$(CFE_PATH)/os/inc
 INCLUDES += -I$(CFE_PATH)/src/inc
 INCLUDES += -I$(CFE_PATH)/src/time
@@ -50,9 +50,11 @@ INCLUDES += -I$(CFE_PATH)/src/tbl
 INCLUDES += -I$(CFE_PATH)/../mission_inc
 INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
 INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/ut_assert/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config/
 INCLUDES += -I$(OSAL_PATH)/build/inc
 INCLUDES += -I$(PSP_PATH)/fsw/inc
-INCLUDES += -I$(PSP_PATH)/fsw/mac-osx/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
 
 #
 # CF_OBJS specifies flight software object files.
@@ -120,14 +122,19 @@ GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
 GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
 endif
 
+ENABLE_WRAP = TRUE
+ifeq ($(ENABLE_WRAP), TRUE)
+WRAP_LOPT = -Wl,-wrap,vsnprintf
+endif
+
 #WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
 WARNINGS = -Wall -Wstrict-prototypes
 DEBUGGER = -g
 
-COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ -DUT_VERBOSE 
+COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) 
 #COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ 
 
-LOPT = $(GCOV_LOPT)
+LOPT = $(GCOV_LOPT) $(WRAP_LOPT)
 
 ###############################################################################
 ## Rule to make the specified TARGET
