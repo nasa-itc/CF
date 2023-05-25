@@ -144,7 +144,7 @@
 **      
 **
 */
-#define CF_OUTGOING_PDU_BUF_SIZE            2048
+#define CF_OUTGOING_PDU_BUF_SIZE            1024
 
 
 /**
