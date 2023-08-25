@@ -185,7 +185,7 @@ void CF_PlaybackFileCmd(CFE_SB_MsgPtr_t MessagePtr)
         }
 
         /* Be sure the file is not open */
-        if(CF_FileOpenCheck(PlaybackFileCmdPtr->SrcFilename) == CF_OPEN)
+        if(OS_FileOpenCheck(PlaybackFileCmdPtr->SrcFilename) == CF_OPEN)
         {
             CFE_EVS_SendEvent(CF_PB_FILE_ERR4_EID,CFE_EVS_ERROR,
                 "CF:Playback File Cmd Error, File is Open:%s",
@@ -501,7 +501,7 @@ int32 CF_QueueDirectoryFiles(CF_QueueDirFiles_t  *Ptr)
         }
 
         /* check that the file is not open */
-        if(CF_FileOpenCheck(FullSrcName) == CF_OPEN)
+        if(OS_FileOpenCheck(FullSrcName) == CF_OPEN)
         {               
             CFE_EVS_SendEvent(CF_QDIR_OPENFILE_EID,CFE_EVS_INFORMATION,
                 "File %s not queued because it's open",FullSrcName);
