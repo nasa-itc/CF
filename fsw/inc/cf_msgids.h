@@ -19,23 +19,31 @@
 
 /**
  * @file
- *
- *  The CFS CFDP (CF) Application header file containing version number
+ *  The CF Application Message IDs header file
  */
 
-#ifndef CF_VERSION_H
-#define CF_VERSION_H
+#ifndef CF_MSGIDS_H
+#define CF_MSGIDS_H
 
 /**
- * \defgroup cfscfversion CFS CFDP Version
- * \ref cfsversions
+ * \defgroup cfscfcmdmid CFS CFDP Command Message IDs
  * \{
  */
 
-#define CF_MAJOR_VERSION (3)  /**< \brief Major version number */
-#define CF_MINOR_VERSION (0)  /**< \brief Minor version number */
-#define CF_REVISION      (99) /**< \brief Revision number */
+#define CF_CMD_MID     (0x18B3) /**< \brief Message ID for commands */
+#define CF_SEND_HK_MID (0x18B4) /**< \brief Message ID to request housekeeping telemetry */
+#define CF_WAKE_UP_MID (0x18B5) /**< \brief Message ID for waking up the processing cycle */
 
 /**\}*/
 
-#endif /* CF_VERSION_H */
+/**
+ * \defgroup cfscftlmmid CFS CFDP Telemetry Message IDs
+ * \{
+ */
+
+#define CF_HK_TLM_MID  (0x08B0) /**< \brief Message ID for housekeeping telemetry */
+#define CF_EOT_TLM_MID (0x08B3) /**< \brief Message ID for end of transaction telemetry */
+
+/**\}*/
+
+#endif /* !CF_MSGIDS_H */

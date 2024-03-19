@@ -19,23 +19,24 @@
 
 /**
  * @file
+ *  @brief The CF Application main application stubs file for unit tests
  *
- *  The CFS CFDP (CF) Application header file containing version number
+ *  This file contains the stubs for the functions that initialize the
+ *  application and link all logic and functionality to the CFS.
  */
 
-#ifndef CF_VERSION_H
-#define CF_VERSION_H
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
 
-/**
- * \defgroup cfscfversion CFS CFDP Version
- * \ref cfsversions
- * \{
- */
+#include <string.h>
 
-#define CF_MAJOR_VERSION (3)  /**< \brief Major version number */
-#define CF_MINOR_VERSION (0)  /**< \brief Minor version number */
-#define CF_REVISION      (99) /**< \brief Revision number */
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+#include "uttools.h"
 
-/**\}*/
-
-#endif /* CF_VERSION_H */
+CF_AppData_t CF_AppData;
