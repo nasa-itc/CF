@@ -19,23 +19,33 @@
 
 /**
  * @file
+ *  @brief The CF Application command handling stubs file
  *
- *  The CFS CFDP (CF) Application header file containing version number
+ *  All ground commands are processed in this file. All supporting functions
+ *  necessary to process the commands are also here.
  */
 
-#ifndef CF_VERSION_H
-#define CF_VERSION_H
+#include "cf_test_utils.h"
+#include "cf_app.h"
 
-/**
- * \defgroup cfscfversion CFS CFDP Version
- * \ref cfsversions
- * \{
- */
+#include <string.h>
 
-#define CF_MAJOR_VERSION (3)  /**< \brief Major version number */
-#define CF_MINOR_VERSION (0)  /**< \brief Minor version number */
-#define CF_REVISION      (99) /**< \brief Revision number */
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
 
-/**\}*/
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_ProcessGroundCommand(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_Buffer_t **ctxt = UT_CF_GetContextBuffer(FuncKey, CFE_SB_Buffer_t *);
 
-#endif /* CF_VERSION_H */
+    if (ctxt)
+    {
+        *ctxt = UT_Hook_GetArgValueByName(Context, "msg", CFE_SB_Buffer_t *);
+    }
+}

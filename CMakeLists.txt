@@ -1,23 +1,32 @@
-cmake_minimum_required(VERSION 2.6.4)
 project(CFS_CF C)
 
-include_directories(fsw/mission_inc)
-include_directories(fsw/platform_inc)
-include_directories(fsw/src/PUB)
+include_directories(${CFS_IO_LIB_MISSION_DIR}/fsw/public_inc)
 
-# include_directories(${cfs_lib_MISSION_DIR}/fsw/public_inc)
-
-aux_source_directory(fsw/src APP_SRC_FILES)
-aux_source_directory(fsw/src/PRI PRI_SRC_FILES)
-
-add_library(cfdp ${PRI_SRC_FILES})
+set(APP_SRC_FILES
+  fsw/src/cf_app.c
+  fsw/src/cf_cfdp.c
+  fsw/src/cf_cfdp_r.c
+  fsw/src/cf_cfdp_s.c
+  fsw/src/cf_cfdp_sbintf.c
+  fsw/src/cf_cfdp_dispatch.c
+  fsw/src/cf_chunk.c
+  fsw/src/cf_clist.c
+  fsw/src/cf_codec.c
+  fsw/src/cf_cmd.c
+  fsw/src/cf_crc.c
+  fsw/src/cf_timer.c
+  fsw/src/cf_utils.c
+)
 
 # Create the app module
 add_cfe_app(cf ${APP_SRC_FILES})
-target_link_libraries(cf cfdp)
 
-# Create table object files
-include_directories(fsw/src)
+# This permits direct access to public headers in the fsw/inc directory
+target_include_directories(cf PUBLIC fsw/inc)
 
-# Add the tables
-add_cfe_tables(cf fsw/tables/cf_cfgtable.c)
+# configuration table
+add_cfe_tables(cf fsw/tables/cf_def_config.c)
+
+if (ENABLE_UNIT_TESTS)
+  add_subdirectory(unit-test)
+endif (ENABLE_UNIT_TESTS)
