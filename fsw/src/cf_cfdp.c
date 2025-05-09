@@ -501,6 +501,7 @@ CF_SendRet_t CF_CFDP_SendAck(CF_Transaction_t *t, CF_CFDP_AckTxnStatus_t ts, CF_
         CF_CFDP_EncodeAck(ph->penc, ack);
         CF_CFDP_SetPduLength(ph);
         CF_CFDP_Send(t->chan_num, ph);
+        OS_printf("CF_CFDP_SendAck Sent Ack!\n");
     }
 
     return ret;
@@ -928,6 +929,8 @@ void CF_CFDP_RecvIdle(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
                     /* leave state as idle, which will reset below */
                 }
                 break;
+            case CF_CFDP_FileDirective_ACK:
+                break; // Suppress ACK spam after file RX has been completed (after FIN-ACK)
             default:
                 CFE_EVS_SendEvent(CF_EID_ERR_CFDP_FD_UNHANDLED, CFE_EVS_EventType_ERROR,
                                   "CF: unhandled file directive code 0x%02x in idle state", fdh->directive_code);

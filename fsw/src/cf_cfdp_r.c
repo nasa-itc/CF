@@ -275,6 +275,7 @@ int CF_CFDP_R_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
         ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
         ret = CF_RxEofRet_BAD_EOF;
     }
+    OS_printf("Received R EOF!\n");
 
     return ret;
 }
@@ -309,6 +310,7 @@ void CF_CFDP_R1_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
     /* after exit, always reset since we are done */
     /* reset even if the eof failed -- class 1, so it won't come again! */
     CF_CFDP_R1_Reset(t);
+    OS_printf("Received R1 EOF!\n");
 }
 
 /*----------------------------------------------------------------
@@ -366,6 +368,7 @@ void CF_CFDP_R2_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
             }
         }
     }
+    OS_printf("Received R2 EOF!\n");
 }
 
 /*----------------------------------------------------------------
@@ -395,6 +398,7 @@ void CF_CFDP_R1_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t
         /* Reset transaction on failure */
         CF_CFDP_R1_Reset(t);
     }
+    OS_printf("Received R1 File data!\n");
 }
 
 /*----------------------------------------------------------------
@@ -440,6 +444,7 @@ void CF_CFDP_R2_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t
         /* Reset transaction on failure */
         CF_CFDP_R2_Reset(t);
     }
+    OS_printf("Received R2 File data!\n");
 }
 
 /*----------------------------------------------------------------
@@ -552,7 +557,7 @@ int CF_CFDP_R_SubstateSendNak(CF_Transaction_t *t)
             }
         }
     }
-
+    OS_printf("Sent R NAK!\n");
     return ret;
 }
 
@@ -706,6 +711,7 @@ int CF_CFDP_R2_CalcCrcChunk(CF_Transaction_t *t)
 
         ret = 0;
     }
+    OS_printf("Calced/Checked CRC\n");
 
     return ret;
 }
@@ -742,7 +748,7 @@ int CF_CFDP_R2_SubstateSendFin(CF_Transaction_t *t)
             ret = -1;
         }
     }
-
+    OS_printf("Sent FIN!\n");
     /* if no message, then try again next time */
     return ret;
 }
@@ -767,6 +773,7 @@ void CF_CFDP_R2_Recv_fin_ack(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
                           (unsigned long)t->history->seq_num);
         ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
     }
+    OS_printf("Received R2 FIN ACK!\n");
 }
 
 /*----------------------------------------------------------------
@@ -1024,6 +1031,7 @@ void CF_CFDP_R_Tick(CF_Transaction_t *t, int *cont /* unused */)
                 }
                 else if (t->state_data.r.sub_state == CF_RxSubState_WAIT_FOR_FIN_ACK)
                 {
+                    OS_printf("Waiting for FIN ACK\n");
                     /* Increment acknak counter */
                     ++t->state_data.r.r2.acknak_count;
 
