@@ -501,7 +501,6 @@ CF_SendRet_t CF_CFDP_SendAck(CF_Transaction_t *t, CF_CFDP_AckTxnStatus_t ts, CF_
         CF_CFDP_EncodeAck(ph->penc, ack);
         CF_CFDP_SetPduLength(ph);
         CF_CFDP_Send(t->chan_num, ph);
-        OS_printf("CF_CFDP_SendAck Sent Ack!\n");
     }
 
     return ret;
