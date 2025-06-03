@@ -838,12 +838,12 @@ int CF_CFDP_RecvNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
 
     CF_CFDP_DecodeNak(ph->pdec, &ph->int_header.nak);
 
-    if (!CF_CODEC_IS_OK(ph->pdec))
-    {
-        CFE_EVS_SendEvent(CF_EID_ERR_PDU_NAK_SHORT, CFE_EVS_EventType_ERROR,
-                          "CF: nak pdu too short: %lu bytes received", (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
-        ret = -1;
-    }
+    // if (!CF_CODEC_IS_OK(ph->pdec))
+    // {
+    //     CFE_EVS_SendEvent(CF_EID_ERR_PDU_NAK_SHORT, CFE_EVS_EventType_ERROR,
+    //                       "CF: nak pdu too short: %lu bytes received", (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+    //     ret = -1;
+    // }
 
     return ret;
 }

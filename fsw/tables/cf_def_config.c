@@ -26,14 +26,14 @@
 #include "cf_tbldefs.h"
 
 CF_ConfigTable_t CF_config_table = {
-    10,    /* ticks_per_second */
+    1,    /* ticks_per_second */
     16384, /* max number of bytes per wakeup to calculate r2 recv file crc */
     25,    /* local entity id */
     {      /* channel configuration for CF_NUM_CHANNELS */
      {
          /* channel 0 */
-         5,      /* max number of outgoing messages per wakeup */
-         5,      /* max number of rx messages per wakeup */
+         2,      /* max number of outgoing messages per wakeup */
+         2,      /* max number of rx messages per wakeup */
          3,      /* ack timer */
          3,      /* nak timer */
          30,     /* inactivity timer */

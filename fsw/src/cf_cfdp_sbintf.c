@@ -156,6 +156,13 @@ void CF_CFDP_Send(uint8 chan_num, const CF_Logical_PduBuffer_t *ph)
     sb_msgsize += ph->pdu_header.data_encoded_length;
     sb_msgsize += CF_PDU_ENCAPSULATION_EXTRA_TRAILING_BYTES;
 
+    OS_printf("CF_SB_Msg: 0x");
+    for (int i = 0; i < sb_msgsize; i++)
+    {
+        OS_printf("%02X", CF_AppData.engine.out.msg->Msg.Byte[i]);
+    }
+    OS_printf("\n");
+
     CFE_MSG_SetSize(&CF_AppData.engine.out.msg->Msg, sb_msgsize);
     CFE_MSG_SetMsgTime(&CF_AppData.engine.out.msg->Msg, CFE_TIME_GetTime());
     CFE_SB_TransmitBuffer(CF_AppData.engine.out.msg, true);
