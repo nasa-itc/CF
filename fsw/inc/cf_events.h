@@ -35,6 +35,8 @@
  * CF_INIT event IDs - Initialization
  */
 
+#define CF_INF_RX_COMPLETE (1)
+
 /**
  * \brief CF Initialization Event ID
  *
