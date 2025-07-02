@@ -552,6 +552,7 @@ int CF_CFDP_R_SubstateSendNak(CF_Transaction_t *t)
             }
         }
     }
+
     return ret;
 }
 
@@ -741,6 +742,7 @@ int CF_CFDP_R2_SubstateSendFin(CF_Transaction_t *t)
             ret = -1;
         }
     }
+
     /* if no message, then try again next time */
     return ret;
 }
