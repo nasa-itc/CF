@@ -173,6 +173,10 @@ void CF_CFDP_R2_Complete(CF_Transaction_t *t, int ok_to_send_nak)
             /* the transaction is now considered complete, but this will not overwrite an
              * error status code if there was one set */
             CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_NO_ERROR);
+            
+            CFE_EVS_SendEvent(CF_INF_RX_COMPLETE, CFE_EVS_EventType_INFORMATION,
+                    "CF R%d(%lu:%lu) RX: Transaction Complete!", (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                    (unsigned long)t->history->seq_num);
         }
 
         /* always go to CF_RxSubState_FILEDATA, and let tick change state */
