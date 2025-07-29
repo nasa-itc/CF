@@ -37,8 +37,8 @@ CF_ConfigTable_t CF_config_table = {
          3,      /* ack timer */
          3,      /* nak timer */
          30,     /* inactivity timer */
-         4,      /* ack limit */
-         4,      /* nak limit */
+         5,      /* ack limit */
+         5,      /* nak limit */
          0x18c8, /* input message id */
          0x08c2, /* output message id */
          16,     /* input pipe depth */
